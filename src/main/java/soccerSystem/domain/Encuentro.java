@@ -2,6 +2,7 @@ package soccerSystem.domain;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 public class Encuentro {
 
@@ -13,10 +14,11 @@ public class Encuentro {
     private String hora;
     private EstadisticaPartido estadistica;
     private int duracion;
+    private List<Sancion> sanciones;
 
 
     public Encuentro(Date fecha, String arbitro, String idPartido, Equipo visitante, Equipo local,
-                     String hora, EstadisticaPartido estadistica, int duracion) {
+                     String hora, EstadisticaPartido estadistica, int duracion,  List<Sancion> sanciones) {
         this.fecha = fecha;
         this.arbitro = arbitro;
         this.idPartido = idPartido;
@@ -25,9 +27,16 @@ public class Encuentro {
         this.hora = hora;
         this.estadistica = estadistica;
         this.duracion = duracion;
+        this.sanciones = sanciones;
     }
 
 
+    /**
+     * Contructuor creado para probar la funcionalidad en el main
+     * @author NotElian
+     * @param idPartido
+     * @param fecha
+     */
     public Encuentro(String idPartido, Date fecha) {
         this.idPartido = idPartido;
         this.fecha = fecha;
@@ -98,6 +107,14 @@ public class Encuentro {
         this.fecha = fecha;
     }
 
+    public List<Sancion> getSanciones() {
+        return sanciones;
+    }
+
+    public void setSanciones(List<Sancion> sanciones) {
+        this.sanciones = sanciones;
+    }
+
     @Override
     public String toString() {
         return "Encuentro{" +
@@ -109,6 +126,7 @@ public class Encuentro {
                 ", hora='" + hora + '\'' +
                 ", estadistica=" + estadistica +
                 ", duracion=" + duracion +
+                ", sanciones=" + sanciones +
                 '}';
     }
 }
