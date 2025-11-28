@@ -8,24 +8,26 @@ public class EstadisticaPartido {
     private int tarjetasAmarillas;
     private int tarjetasRojas;
     private int corners;
-    private String minutoAccion;
     private int totalDeCambios;
+    private Sancion sancion;
 
-    public EstadisticaPartido() {
+    public EstadisticaPartido(String marcadorFinal) {
+        this.marcadorFinal = marcadorFinal;
     }
 
-    public EstadisticaPartido(String marcadorFinal, int totalDeCambios, String minutoAccion,
+    public EstadisticaPartido(String marcadorFinal, int totalDeCambios,
                               int corners, int tarjetasAmarillas, int tarjetasRojas, int faltasCometidas,
-                              int tirosAlArco) {
+                              int tirosAlArco, Sancion sancion) {
         this.marcadorFinal = marcadorFinal;
         this.totalDeCambios = totalDeCambios;
-        this.minutoAccion = minutoAccion;
         this.corners = corners;
         this.tarjetasAmarillas = tarjetasAmarillas;
         this.tarjetasRojas = tarjetasRojas;
         this.faltasCometidas = faltasCometidas;
         this.tirosAlArco = tirosAlArco;
+        this.sancion = sancion;
     }
+
 
     public String getMarcadorFinal() {
         return marcadorFinal;
@@ -40,6 +42,9 @@ public class EstadisticaPartido {
     }
 
     public void setTirosAlArco(int tirosAlArco) {
+        if(tirosAlArco < 0){
+            throw new IllegalArgumentException("Los Tiros al Arco no pueden ser negativos");
+        }
         this.tirosAlArco = tirosAlArco;
     }
 
@@ -75,14 +80,6 @@ public class EstadisticaPartido {
         this.corners = corners;
     }
 
-    public String getMinutoAccion() {
-        return minutoAccion;
-    }
-
-    public void setMinutoAccion(String minutoAccion) {
-        this.minutoAccion = minutoAccion;
-    }
-
     public int getTotalDeCambios() {
         return totalDeCambios;
     }
@@ -100,7 +97,6 @@ public class EstadisticaPartido {
                 ", tarjetasAmarillas=" + tarjetasAmarillas +
                 ", tarjetasRojas=" + tarjetasRojas +
                 ", corners=" + corners +
-                ", minutoAccion='" + minutoAccion + '\'' +
                 ", totalDeCambios=" + totalDeCambios +
                 '}';
     }

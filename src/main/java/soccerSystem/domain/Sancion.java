@@ -4,7 +4,7 @@ public class Sancion {
 
     private int minuto;
     private String motivo;
-    private Partido partido;
+    private Encuentro encuentro;
     private TipoDeSancion tipoDeSancion;
     private int numeroJugador;
 
@@ -12,11 +12,11 @@ public class Sancion {
     }
 
     public Sancion(int minuto, int numeroJugador, String motivo,
-                              Partido partido, TipoDeSancion tipoDeSancion) {
+                   Encuentro encuentro, TipoDeSancion tipoDeSancion) {
         this.minuto = minuto;
         this.numeroJugador = numeroJugador;
         this.motivo = motivo;
-        this.partido = partido;
+        this.encuentro = encuentro;
         this.tipoDeSancion = tipoDeSancion;
     }
 
@@ -44,12 +44,12 @@ public class Sancion {
         this.tipoDeSancion = tipoDeSancion;
     }
 
-    public Partido getPartido() {
-        return partido;
+    public Encuentro getPartido() {
+        return encuentro;
     }
 
-    public void setPartido(Partido partido) {
-        this.partido = partido;
+    public void setPartido(Encuentro encuentro) {
+        this.encuentro = encuentro;
     }
 
     public int getNumeroJugador() {
@@ -65,7 +65,7 @@ public class Sancion {
         return "EstadisticaPartido{" +
                 "minuto=" + minuto +
                 ", motivo='" + motivo + '\'' +
-                ", partido=" + partido +
+                ", partido=" + encuentro +
                 ", tipoDeSancion=" + tipoDeSancion +
                 ", numeroJugador=" + numeroJugador +
                 '}';

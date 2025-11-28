@@ -1,37 +1,25 @@
 package soccerSystem.domain;
 
-public class Jugador {
+public class Jugador extends Persona {
 
-    private String nombre;
-    private String apellido;
     private int numeroCamisa;
-    private String cedula;
 
-    public Jugador() {
-    }
-
-    public Jugador(String nombre, String apellido, int numeroCamisa, String cedula) {
-        this.nombre = nombre;
-        this.apellido = apellido;
+    public Jugador(int numeroCamisa) {
         this.numeroCamisa = numeroCamisa;
-        this.cedula = cedula;
     }
 
-    public String getNombre() {
-        return nombre;
+    public Jugador(String nombre, String apellido, String cedula, int numeroCamisa) {
+        super(nombre, apellido, cedula);
+        this.numeroCamisa = numeroCamisa;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void registrarSancion(Sancion sancion) {
+        System.out.println("Sancion registrada para el jugador: " +getNombre() + "\n");
+        System.out.println("Tipo: " +sancion.getTipoDeSancion() + "\n");
+        System.out.println("Motivo: " +sancion.getMotivo().toUpperCase() + "\n");
+        System.out.println("Minuto en el que se cometido la sancion: " +sancion.getMinuto() + "\n");
     }
 
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
 
     public int getNumeroCamisa() {
         return numeroCamisa;
@@ -41,21 +29,10 @@ public class Jugador {
         this.numeroCamisa = numeroCamisa;
     }
 
-    public String getCedula() {
-        return cedula;
-    }
-
-    public void setCedula(String cedula) {
-        this.cedula = cedula;
-    }
-
     @Override
     public String toString() {
-        return "Jugador{" +
-                "nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
-                ", numeroCamisa=" + numeroCamisa +
-                ", cedula='" + cedula + '\'' +
-                '}';
+        return
+                "numeroCamisa = " + numeroCamisa ;
+
     }
 }
