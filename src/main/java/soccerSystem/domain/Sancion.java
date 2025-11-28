@@ -7,17 +7,31 @@ public class Sancion {
     private Encuentro encuentro;
     private TipoDeSancion tipoDeSancion;
     private int numeroJugador;
+    private boolean estadoSancion;
 
     public Sancion() {
     }
 
     public Sancion(int minuto, int numeroJugador, String motivo,
-                   Encuentro encuentro, TipoDeSancion tipoDeSancion) {
+                   Encuentro encuentro, TipoDeSancion tipoDeSancion, boolean estadoSancion) {
         this.minuto = minuto;
         this.numeroJugador = numeroJugador;
         this.motivo = motivo;
         this.encuentro = encuentro;
         this.tipoDeSancion = tipoDeSancion;
+        this.estadoSancion = estadoSancion;
+    }
+
+    public void registrarTiempoSancion(){
+
+    }
+
+    public void registrarObservaciones(){
+
+    }
+
+    public void cambiarTiempoSancion(){{
+    }
     }
 
     public int getMinuto() {
@@ -58,6 +72,22 @@ public class Sancion {
 
     public void setNumeroJugador(int numeroJugador) {
         this.numeroJugador = numeroJugador;
+    }
+
+    public Encuentro getEncuentro() {
+        return encuentro;
+    }
+
+    public void setEncuentro(Encuentro encuentro) {
+        this.encuentro = encuentro;
+    }
+
+    public boolean isEstadoSancion() {
+        return estadoSancion;
+    }
+
+    public void setEstadoSancion(boolean estadoSancion) {
+        this.estadoSancion = estadoSancion;
     }
 
     @Override

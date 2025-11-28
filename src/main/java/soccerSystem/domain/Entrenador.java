@@ -3,15 +3,37 @@ package soccerSystem.domain;
 public class Entrenador extends Persona {
 
     private String numeroCertificado;
-    private int numeroSanciones;
-    private boolean habilitado;
+    private Sancion sancionesActuales;
+
+    public Entrenador(String numeroCertificado, Sancion sancionesActuales) {
+        this.numeroCertificado = numeroCertificado;
+        this.sancionesActuales = sancionesActuales;
+    }
 
     public Entrenador(String nombre, String apellido, String cedula,
-                      String numeroCertificado, int numeroSanciones, boolean habilitado) {
+                      String numeroCertificado, Sancion sancionesActuales) {
         super(nombre, apellido, cedula);
         this.numeroCertificado = numeroCertificado;
-        this.numeroSanciones = numeroSanciones;
-        this.habilitado = habilitado;
+        this.sancionesActuales = sancionesActuales;
+    }
+
+    public boolean habilitadoDirigir(){
+        return true;
+    }
+
+    public void aumentarSanciones(){
+
+    }
+    public void mostrarTotalSanciones(){
+
+    }
+
+    public Sancion getSancionesActuales() {
+        return sancionesActuales;
+    }
+
+    public void setSancionesActuales(Sancion sancionesActuales) {
+        this.sancionesActuales = sancionesActuales;
     }
 
     public String getNumeroCertificado() {
@@ -22,31 +44,14 @@ public class Entrenador extends Persona {
         this.numeroCertificado = numeroCertificado;
     }
 
-    public int getNumeroSanciones() {
-        return numeroSanciones;
-    }
-
-    public void setNumeroSanciones(int numeroSanciones) {
-        this.numeroSanciones = numeroSanciones;
-    }
-
-    public boolean isHabilitado() {
-        return habilitado;
-    }
-
-    public void setHabilitado(boolean habilitado) {
-        if(habilitado == false) {
-            throw new IllegalArgumentException("El entrenador no esta habilitado para dirijir");
-        }
-        this.habilitado = habilitado;
-    }
-
     @Override
     public String toString() {
         return "Entrenador{" +
                 "numeroCertificado='" + numeroCertificado + '\'' +
-                ", numeroSanciones=" + numeroSanciones +
-                ", habilitado=" + habilitado +
+                ", sancionesActuales=" + sancionesActuales +
                 '}';
     }
 }
+
+
+
