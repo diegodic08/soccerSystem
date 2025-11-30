@@ -15,6 +15,12 @@ public abstract class Persona {
         this.cedula = cedula;
     }
 
+    public static void validarCedula(String cedula){
+        if(cedula.length() != 10){
+            throw new IllegalArgumentException("La cedula debe tener 10 caracteres");
+        }
+    }
+
     public String getNombre() {
         return nombre;
     }

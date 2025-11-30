@@ -13,6 +13,12 @@ public class Jugador extends Persona {
         this.numeroCamisa = numeroCamisa;
     }
 
+    public static void validarNumeroCamisa(int numeroCamisa) {
+        if(numeroCamisa < 0 || numeroCamisa > 99){
+            throw new IllegalArgumentException("El numero de camisa no cumple con el formato");
+        }
+    }
+
     public void registrarSancion(Sancion sancion) {
         System.out.println("Sancion registrada para el jugador: " +getNombre() + "\n");
         System.out.println("Tipo: " +sancion.getTipoDeSancion() + "\n");
@@ -31,8 +37,8 @@ public class Jugador extends Persona {
 
     @Override
     public String toString() {
-        return
-                "numeroCamisa = " + numeroCamisa ;
-
+        return "Jugador: " + getNombre() + " " + getApellido() +
+                " | Cédula: " + getCedula() +
+                " | Nº Camisa: " + numeroCamisa;
     }
 }

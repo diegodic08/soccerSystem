@@ -8,7 +8,7 @@ public class Equipo {
     private String nombreEquipo;
     private String idEquipo;
     private String colorUniforme;
-    private Jugador jugador;
+    private List<Jugador> jugadores;
 
     public Equipo() {
     }
@@ -17,21 +17,23 @@ public class Equipo {
         this.nombreEquipo = nombreEquipo;
         this.idEquipo = idEquipo;
         this.colorUniforme = colorUniforme;
+        this.jugadores = new ArrayList<>();
     }
 
     public void agregarJugador(Jugador jugador) {
-        this.jugador = jugador;
-        System.out.println("Jugador registrado en el equipo: " + nombreEquipo  + "\n");
-        System.out.println("Nombre del jugador: " + jugador.getNombre()  + "\n") ;
+       for (Jugador j : jugadores){
+           if (j.getNombre().equals(jugador.getNombre())){
+               throw new IllegalArgumentException("El Jugador ya se encuentra registrado");
+           }
+       }
+       jugadores.add(jugador);
+        System.out.println("Jugador registrado correctamente");
     }
 
     public void mostrarJugadores(){
-        if(jugador != null){
-            System.out.println("Jugador del equipo: " + nombreEquipo  + "\n");
-            System.out.println(jugador  + "\n");;
-        }
-        else {
-            System.out.println("No hay jugadores registros en el equipo");
+        System.out.println("Jugadores del equip:" +nombreEquipo + ":");
+        for (Jugador j : jugadores){
+            System.out.println(j);
         }
     }
 
@@ -59,12 +61,12 @@ public class Equipo {
         this.idEquipo = idEquipo;
     }
 
-    public Jugador getJugador() {
-        return jugador;
+    public List<Jugador> getJugadores() {
+        return jugadores;
     }
 
-    public void setJugador(Jugador jugador) {
-        this.jugador = jugador;
+    public void setJugadores(List<Jugador> jugadores) {
+        this.jugadores = jugadores;
     }
 
     @Override
