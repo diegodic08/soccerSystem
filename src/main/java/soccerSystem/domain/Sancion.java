@@ -1,4 +1,4 @@
-package soccerSystem.domain;
+package unl.edu.cc.soccersystem.domain;
 
 public class Sancion {
 

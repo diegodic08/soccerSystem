@@ -1,62 +1,80 @@
-package soccerSystem.domain;
+package unl.edu.cc.soccersystem.domain;
 
+import jakarta.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
-public class Encuentro {
+@Entity
+@Table(name = "encuentros")
+public class Encuentro implements Serializable {
 
-    private Date fecha;
-    private String idPartido;
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private LocalDate fecha;
+
+    @Column(length = 50)
     private String arbitro;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "equipo_visitante_id")
     private Equipo visitante;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "equipo_local_id")
     private Equipo local;
+
+    @Column(length = 10)
     private String hora;
-    private EstadisticaPartido estadistica;
-    private int duracion;
-    private List<Sancion> sanciones;
 
+    @Column(name = "duracion")
+    private Integer duracion;
 
-    public Encuentro(Date fecha, String arbitro, String idPartido, Equipo visitante, Equipo local,
-                     String hora, EstadisticaPartido estadistica, int duracion,  List<Sancion> sanciones) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "campeonato_id")
+    private Campeonato campeonato;
+
+    public Encuentro() {
+        this.fecha = LocalDate.now();
+    }
+
+    public Encuentro(String idEncuentro, LocalDate date) {
+    }
+
+    public Encuentro(LocalDate fecha, String arbitro, Equipo visitante, Equipo local,
+            String hora, Integer duracion) {
         this.fecha = fecha;
         this.arbitro = arbitro;
-        this.idPartido = idPartido;
         this.visitante = visitante;
         this.local = local;
         this.hora = hora;
-        this.estadistica = estadistica;
         this.duracion = duracion;
-        this.sanciones = sanciones;
     }
 
-
-    /**
-     * Contructuor creado para probar la funcionalidad en el main
-     * @author NotElian
-     * @param idPartido
-     * @param fecha
-     */
-    public Encuentro(String idPartido, Date fecha) {
-        this.idPartido = idPartido;
+    public Encuentro(LocalDate fecha) {
         this.fecha = fecha;
     }
 
+    // Getters y Setters
+    public Long getId() {
+        return id;
+    }
 
-    public int getDuracion() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getDuracion() {
         return duracion;
     }
 
-    public void setDuracion(int duracion) {
+    public void setDuracion(Integer duracion) {
         this.duracion = duracion;
-    }
-
-    public EstadisticaPartido getEstadistica() {
-        return estadistica;
-    }
-
-    public void setEstadistica(EstadisticaPartido estadistica) {
-        this.estadistica = estadistica;
     }
 
     public String getHora() {
@@ -91,43 +109,30 @@ public class Encuentro {
         this.arbitro = arbitro;
     }
 
-    public String getIdPartido() {
-        return idPartido;
-    }
-
-    public void setIdPartido(String idPartido) {
-        this.idPartido = idPartido;
-    }
-
-    public Date getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDate fecha) {
         this.fecha = fecha;
     }
 
-    public List<Sancion> getSanciones() {
-        return sanciones;
+    public Campeonato getCampeonato() {
+        return campeonato;
     }
 
-    public void setSanciones(List<Sancion> sanciones) {
-        this.sanciones = sanciones;
+    public void setCampeonato(Campeonato campeonato) {
+        this.campeonato = campeonato;
     }
 
     @Override
     public String toString() {
         return "Encuentro{" +
-                "fecha=" + fecha +
-                ", idPartido='" + idPartido + '\'' +
+                "id=" + id +
+                ", fecha=" + fecha +
                 ", arbitro='" + arbitro + '\'' +
-                ", visitante=" + visitante +
-                ", local=" + local +
-                ", hora='" + hora + '\'' +
-                ", estadistica=" + estadistica +
-                ", duracion=" + duracion +
-                ", sanciones=" + sanciones +
+                ", visitante=" + (visitante != null ? visitante.getNombreEquipo() : "null") +
+                ", local=" + (local != null ? local.getNombreEquipo() : "null") +
                 '}';
     }
 }
-
