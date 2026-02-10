@@ -23,6 +23,9 @@ public class CampeonatoBean implements Serializable {
     @jakarta.inject.Inject
     private SoccerSystemFacade facade;
 
+    @jakarta.inject.Inject
+    private AdminBean adminBean;
+
     private Campeonato campeonato;
     private Campeonato campeonatoSeleccionado;
     private List<Campeonato> campeonatos;
@@ -54,6 +57,9 @@ public class CampeonatoBean implements Serializable {
      */
     public String crearCampeonato() {
         try {
+            if (!validarAdmin()) {
+                return null;
+            }
             if (campeonato.getNombre() == null || campeonato.getNombre().trim().isEmpty()) {
                 addMessage(FacesMessage.SEVERITY_ERROR, "Error",
                         "El nombre del campeonato es obligatorio");
@@ -115,6 +121,9 @@ public class CampeonatoBean implements Serializable {
      */
     public void actualizarCampeonato() {
         try {
+            if (!validarAdmin()) {
+                return;
+            }
             if (campeonatoSeleccionado == null) {
                 return;
             }
@@ -132,6 +141,9 @@ public class CampeonatoBean implements Serializable {
      */
     public String eliminarCampeonato(Campeonato c) {
         try {
+            if (!validarAdmin()) {
+                return null;
+            }
             facade.eliminarCampeonato(c.getId());
             addMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Campeonato eliminado");
             cargarCampeonatos(); // Recargar lista
@@ -176,7 +188,16 @@ public class CampeonatoBean implements Serializable {
                 new FacesMessage(severity, summary, detail));
     }
 
-    // Getters y Setters
+    private boolean validarAdmin() {
+        if (adminBean != null && adminBean.isAdminAutenticado()) {
+            return true;
+        }
+        addMessage(FacesMessage.SEVERITY_ERROR, "Acceso restringido",
+                "Debe iniciar sesion como administrador");
+        return false;
+    }
+
+
     public Campeonato getCampeonato() {
         return campeonato;
     }

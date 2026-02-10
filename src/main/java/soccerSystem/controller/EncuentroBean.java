@@ -28,6 +28,9 @@ public class EncuentroBean implements Serializable {
     @Inject
     private SoccerSystemFacade facade;
 
+    @Inject
+    private AdminBean adminBean;
+
     private Encuentro encuentro;
     private Equipo equipoA;
     private Equipo equipoB;
@@ -44,6 +47,9 @@ public class EncuentroBean implements Serializable {
 
     public String iniciarEncuentro() {
         try {
+            if (!validarAdmin()) {
+                return null;
+            }
             if (equipoA == null || equipoB == null) {
                 addMessage(FacesMessage.SEVERITY_ERROR, "Error",
                         "Debe seleccionar ambos equipos");
@@ -124,6 +130,15 @@ public class EncuentroBean implements Serializable {
     private void addMessage(FacesMessage.Severity severity, String summary, String detail) {
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(severity, summary, detail));
+    }
+
+    private boolean validarAdmin() {
+        if (adminBean != null && adminBean.isAdminAutenticado()) {
+            return true;
+        }
+        addMessage(FacesMessage.SEVERITY_ERROR, "Acceso restringido",
+                "Debe iniciar sesion como administrador");
+        return false;
     }
 
     // Getters y Setters

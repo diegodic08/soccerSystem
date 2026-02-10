@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import unl.edu.cc.soccersystem.domain.Jugador;
 import unl.edu.cc.soccersystem.facade.SoccerSystemFacade;
+import unl.edu.cc.soccersystem.repository.JugadorRepository;
 
 import java.io.Serializable;
 
@@ -23,7 +24,14 @@ public class JugadorBean implements Serializable {
     @Inject
     private SoccerSystemFacade facade;
 
+    @Inject
+    private JugadorRepository jugadorRepository;
+
+    @Inject
+    private AdminBean adminBean;
+
     private Jugador jugador;
+    private Jugador jugadorSeleccionado;
     private boolean mostrarFormulario;
 
     @PostConstruct
@@ -37,6 +45,9 @@ public class JugadorBean implements Serializable {
      */
     public String agregarJugador() {
         try {
+            if (!validarAdmin()) {
+                return null;
+            }
             if (equipoBean.getEquipoSeleccionado() == null) {
                 addMessage(FacesMessage.SEVERITY_ERROR, "Error",
                         "No hay equipo seleccionado");
@@ -61,6 +72,9 @@ public class JugadorBean implements Serializable {
                         "La cédula del jugador es obligatoria");
                 return null;
             }
+
+            Jugador.validarCedula(jugador.getCedula());
+            Jugador.validarNumeroCamisa(jugador.getNumeroCamisa());
 
             // Crear jugador usando el facade
             facade.crearJugador(
@@ -91,6 +105,100 @@ public class JugadorBean implements Serializable {
                     "Error al agregar jugador: " + e.getMessage());
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void prepararEditar(Jugador j) {
+        this.jugadorSeleccionado = j;
+    }
+
+    public void actualizarJugador() {
+        try {
+            if (!validarAdmin()) {
+                return;
+            }
+            if (jugadorSeleccionado == null) {
+                return;
+            }
+            if (equipoBean.getEquipoSeleccionado() == null) {
+                addMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                        "No hay equipo seleccionado");
+                return;
+            }
+
+            if (jugadorSeleccionado.getNombre() == null
+                    || jugadorSeleccionado.getNombre().trim().isEmpty()) {
+                addMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                        "El nombre del jugador es obligatorio");
+                return;
+            }
+
+            if (jugadorSeleccionado.getApellido() == null
+                    || jugadorSeleccionado.getApellido().trim().isEmpty()) {
+                addMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                        "El apellido del jugador es obligatorio");
+                return;
+            }
+
+            if (jugadorSeleccionado.getCedula() == null
+                    || jugadorSeleccionado.getCedula().trim().isEmpty()) {
+                addMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                        "La cédula del jugador es obligatoria");
+                return;
+            }
+
+            Jugador.validarCedula(jugadorSeleccionado.getCedula());
+            Jugador.validarNumeroCamisa(jugadorSeleccionado.getNumeroCamisa());
+
+            Jugador existente = jugadorRepository.findByCedula(jugadorSeleccionado.getCedula());
+            if (existente != null && !existente.getId().equals(jugadorSeleccionado.getId())) {
+                addMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                        "Ya existe un jugador con esa cédula");
+                return;
+            }
+
+            Long equipoId = equipoBean.getEquipoSeleccionado().getId();
+            if (jugadorRepository.existeNumeroCamisaEnEquipo(
+                    equipoId,
+                    jugadorSeleccionado.getNumeroCamisa(),
+                    jugadorSeleccionado.getId())) {
+                addMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                        "Ya existe un jugador con ese número de camisa en el equipo");
+                return;
+            }
+
+            facade.actualizarJugador(jugadorSeleccionado);
+
+            equipoBean.setEquipoSeleccionado(
+                    facade.obtenerEquipoConJugadores(equipoId));
+
+            addMessage(FacesMessage.SEVERITY_INFO, "Éxito",
+                    "Jugador actualizado correctamente");
+        } catch (Exception e) {
+            addMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                    "Error al actualizar jugador: " + e.getMessage());
+        }
+    }
+
+    public void eliminarJugador(Jugador j) {
+        try {
+            if (!validarAdmin()) {
+                return;
+            }
+            if (j == null) {
+                return;
+            }
+            facade.eliminarJugador(j.getId());
+            if (equipoBean.getEquipoSeleccionado() != null) {
+                equipoBean.setEquipoSeleccionado(
+                        facade.obtenerEquipoConJugadores(
+                                equipoBean.getEquipoSeleccionado().getId()));
+            }
+            addMessage(FacesMessage.SEVERITY_INFO, "Éxito",
+                    "Jugador eliminado correctamente");
+        } catch (Exception e) {
+            addMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                    "Error al eliminar jugador: " + e.getMessage());
         }
     }
 
@@ -126,6 +234,15 @@ public class JugadorBean implements Serializable {
                 new FacesMessage(severity, summary, detail));
     }
 
+    private boolean validarAdmin() {
+        if (adminBean != null && adminBean.isAdminAutenticado()) {
+            return true;
+        }
+        addMessage(FacesMessage.SEVERITY_ERROR, "Acceso restringido",
+                "Debe iniciar sesion como administrador");
+        return false;
+    }
+
     // Getters y Setters
     public Jugador getJugador() {
         return jugador;
@@ -133,6 +250,14 @@ public class JugadorBean implements Serializable {
 
     public void setJugador(Jugador jugador) {
         this.jugador = jugador;
+    }
+
+    public Jugador getJugadorSeleccionado() {
+        return jugadorSeleccionado;
+    }
+
+    public void setJugadorSeleccionado(Jugador jugadorSeleccionado) {
+        this.jugadorSeleccionado = jugadorSeleccionado;
     }
 
     public boolean isMostrarFormulario() {

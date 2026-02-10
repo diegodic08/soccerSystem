@@ -23,6 +23,9 @@ public class EquipoBean implements Serializable {
     @Inject
     private SoccerSystemFacade facade;
 
+    @Inject
+    private AdminBean adminBean;
+
     private Equipo equipo;
     private Equipo equipoSeleccionado;
     private boolean mostrarFormulario;
@@ -38,6 +41,9 @@ public class EquipoBean implements Serializable {
      */
     public String crearEquipo() {
         try {
+            if (!validarAdmin()) {
+                return null;
+            }
             if (campeonatoBean.getCampeonatoSeleccionado() == null) {
                 addMessage(FacesMessage.SEVERITY_ERROR, "Error",
                         "No hay campeonato seleccionado");
@@ -86,6 +92,9 @@ public class EquipoBean implements Serializable {
 
     public void actualizarEquipo() {
         try {
+            if (!validarAdmin()) {
+                return;
+            }
             if (equipoSeleccionado == null) {
                 return;
             }
@@ -127,6 +136,9 @@ public class EquipoBean implements Serializable {
      */
     public void eliminarEquipo(Equipo e) {
         try {
+            if (!validarAdmin()) {
+                return;
+            }
             facade.eliminarEquipo(e.getId());
 
             // Recargar campeonato
@@ -179,6 +191,15 @@ public class EquipoBean implements Serializable {
     private void addMessage(FacesMessage.Severity severity, String summary, String detail) {
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(severity, summary, detail));
+    }
+
+    private boolean validarAdmin() {
+        if (adminBean != null && adminBean.isAdminAutenticado()) {
+            return true;
+        }
+        addMessage(FacesMessage.SEVERITY_ERROR, "Acceso restringido",
+                "Debe iniciar sesion como administrador");
+        return false;
     }
 
     // Getters y Setters
